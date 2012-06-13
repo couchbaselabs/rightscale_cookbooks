@@ -1,0 +1,32 @@
+{
+  "name": "couchbase",
+  "description": "Installs/Configures Couchbase Server",
+  "long_description": "= RightScale LAMP Cookbook\n\n== DESCRIPTION:\n\nBasic all-in-one Couchbase cookbook designed to work in cloud settings.\n\n== REQUIREMENTS:\n\n* Requires a virtual machine launched from a RightScale-managed RightImage.\n\n== COOKBOOKS DEPENDENCIES:\n\nPlease see <tt>metadata.rb</tt> file for the latest dependencies.\n\n== KNOWN LIMITATIONS:\n\nThere are no known limitations.\n\n== SETUP/USAGE:\n\nPlace the <tt>lamp::default</tt> recipe into your boot recipes after the\n<tt>db_mysql::default</tt> and <tt>app_php::default</tt> recipes.\n\n== DETAILS:\n\nThe <tt>lamp::default</tt> sets up attributes for the <tt>app</tt> and\n<tt>db_mysql</tt> cookbooks: it sets the app server to listen on port 80, and it\nsets the database server to listen only on <tt>localhost</tt>.\n\n= LICENSE:\n\nCopyright RightScale, Inc. All rights reserved.  All access and use subject to\nthe RightScale Terms of Service available at http://www.rightscale.com/terms.php\nand, if applicable, other agreements such as a RightScale Master Subscription\nAgreement.\n",
+  "maintainer": "Couchbase, Inc.",
+  "maintainer_email": "support@couchbase.com",
+  "license": "Copyright Couchbase, Inc. All rights reserved.",
+  "platforms": {
+  },
+  "dependencies": {
+    "db_mysql": ">= 0.0.0",
+    "app_php": ">= 0.0.0"
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+    "couchbase::default": "Install Couchbase Server specific packages. Setup Couchbase Server specific default attributes"
+  },
+  "version": "0.1.0"
+}
