@@ -21,6 +21,17 @@
   "replacing": {
   },
   "attributes": {
+    "db_couchbase/bucket/name": {
+      "description": "bucket name",
+      "recipes": [
+        "couchbase::default"
+      ],      
+      "calculated": false,
+      "type": "string",
+      "default": "default",
+      "display_name": "Bucket Name",
+      "required": "optional"
+    }
   },
   "groupings": {
   },
