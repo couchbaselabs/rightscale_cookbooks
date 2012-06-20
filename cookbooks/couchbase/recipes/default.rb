@@ -11,7 +11,7 @@ log "Downloading Couchbase Server 1.8.0"
 
 case node[:platform]
 when "centos"
-   case node["kernel"]["machine"
+   case node["kernel"]["machine"]
    when "x86_64"
       remote_file "/tmp/couchbase-server.rpm"
          source "http://packages.couchbase.com/releases/1.8.0/couchbase-server-enterprise_x86_64_1.8.0.deb"
