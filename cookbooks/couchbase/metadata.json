@@ -31,6 +31,61 @@
       "default": "default",
       "display_name": "Bucket Name",
       "required": "optional"
+    },
+    "db_couchbase/cluster/username": {
+      "description": "Web Admin Username",
+      "recipes": [
+        "couchbase::default"
+      ],
+      "calculated": false,
+      "type": "string",
+      "default": "Administrator",
+      "display_name": "Web Admin Username",
+      "required": "optional"
+    },
+    "db_couchbase/cluster/password": {
+      "description": "Web Admin Password",
+      "recipes": [
+        "couchbase::default"
+      ],
+      "calculated": false,
+      "type": "string",
+      "default": "Administrator",
+      "display_name": "Web Admin Password",
+      "required": "optional"
+    },
+    "db_couchbase/bucket/password": {
+      "description": "bucket password",
+      "recipes": [
+        "couchbase::default"
+      ],
+      "calculated": false,
+      "type": "string",
+      "default": "",
+      "display_name": "Bucket Sasl Password",
+      "required": "optional"
+    },
+    "db_couchbase/bucket/ram": {
+      "description": "bucket ram",
+      "recipes": [
+        "couchbase::default"
+      ],
+      "calculated": false,
+      "type": "integer",
+      "default": "4000",
+      "display_name": "Bucket Quota",
+      "required": "optional"
+    },
+    "db_couchbase/bucket/replica": {
+      "description": "bucket replica",
+      "recipes": [
+        "couchbase::default"
+      ],
+      "calculated": false,
+      "type": "integer",
+      "default": "1",
+      "display_name": "Bucket Replica Count",
+      "required": "optional"
     }
   },
   "groupings": {
