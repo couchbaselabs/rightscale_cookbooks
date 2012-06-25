@@ -71,8 +71,8 @@
         "couchbase::default"
       ],
       "calculated": false,
-      "type": "integer",
-      "default": 4000,
+      "type": "string",
+      "default": "4000",
       "display_name": "Bucket Quota",
       "required": "optional"
     },
@@ -82,8 +82,8 @@
         "couchbase::default"
       ],
       "calculated": false,
-      "type": "integer",
-      "default": 1,
+      "type": "string",
+      "default": "1",
       "display_name": "Bucket Replica Count",
       "required": "optional"
     }
