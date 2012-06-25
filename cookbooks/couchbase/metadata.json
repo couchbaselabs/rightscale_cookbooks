@@ -72,7 +72,7 @@
       ],
       "calculated": false,
       "type": "integer",
-      "default": "4000",
+      "default": 4000,
       "display_name": "Bucket Quota",
       "required": "optional"
     },
@@ -83,7 +83,7 @@
       ],
       "calculated": false,
       "type": "integer",
-      "default": "1",
+      "default": 1,
       "display_name": "Bucket Replica Count",
       "required": "optional"
     }
