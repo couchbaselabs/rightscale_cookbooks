@@ -27,6 +27,15 @@ if node[:platform] =~ /redhat|centos/ and not File.exists?("/tmp/couchbase-serve
       provider Chef::Provider::Package::Rpm
    end
 end
+execute "sleep for 10 seconds"
+  command "sleep 10"
+  action :run
+end
+bash "sleep 10 seconds" do
+  code <<-EOF
+  sleep 10
+  EOF
+end
 execute "initialize couchbase cluster with username:#{node[:db_couchbase][:cluster][:username]}" do
   command "/opt/couchbase/bin/couchbase-cli cluster-init -c localhost:8091 --cluster-init-username=#{node[:db_couchbase][:cluster][:username]} --cluster-init-password=#{node[:db_couchbase][:cluster][:password]}"
   action :run
