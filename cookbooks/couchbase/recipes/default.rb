@@ -7,21 +7,21 @@
 
 rightscale_marker :begin
 
+couchbase_edition = "enterprise"
 couchbase_version = "1.8.1"
+couchbase_package = "couchbase-server-#{couchbase_edition}_x86_64_#{couchbase_version}.rpm"
 
-log "Downloading Couchbase Server #{couchbase_version}"
+log "downloading #{couchbase_package}"
 
 if node[:platform] =~ /redhat|centos/ and not File.exists?("/tmp/couchbase-server.rpm")
-  remote_file "/tmp/couchbase-server.rpm" do
-    mach = "x86"
-    mach = "x86_64" if node["kernel"]["machine"] == "x86_64"
-    source "http://packages.couchbase.com/releases/#{couchbase_version}/couchbase-server-enterprise_x86_64_#{couchbase_version}.rpm"
+  remote_file "/tmp/#{couchbase_package}" do
+    source "http://packages.couchbase.com/releases/#{couchbase_version}/#{couchbase_package}"
     mode "0644"
   end
 
   package "couchbase-server" do
     action :install
-    source "/tmp/couchbase-server.rpm"
+    source "/tmp/#{couchbase_package}"
     provider Chef::Provider::Package::Rpm
   end
 end
