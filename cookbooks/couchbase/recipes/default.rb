@@ -13,17 +13,17 @@ couchbase_package = "couchbase-server-#{couchbase_edition}_x86_64_#{couchbase_ve
 
 log "downloading #{couchbase_package}"
 
-if node[:platform] =~ /redhat|centos/ and not File.exists?("/tmp/couchbase-server.rpm")
+if node[:platform] =~ /redhat|centos/ and not File.exists?("/tmp/#{couchbase_package}")
   remote_file "/tmp/#{couchbase_package}" do
     source "http://packages.couchbase.com/releases/#{couchbase_version}/#{couchbase_package}"
     mode "0644"
   end
+end
 
-  package "couchbase-server" do
-    action :install
-    source "/tmp/#{couchbase_package}"
-    provider Chef::Provider::Package::Rpm
-  end
+package "couchbase-server" do
+  action :install
+  source "/tmp/#{couchbase_package}"
+  provider Chef::Provider::Package::Rpm
 end
 
 execute "initialize couchbase cluster with username:#{node[:db_couchbase][:cluster][:username]}" do
