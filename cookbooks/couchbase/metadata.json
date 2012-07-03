@@ -72,7 +72,7 @@
       ],
       "calculated": false,
       "type": "string",
-      "default": "4000",
+      "default": "2000",
       "display_name": "Bucket RAM Quota",
       "required": "optional"
     },
