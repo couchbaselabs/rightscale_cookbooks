@@ -7,7 +7,6 @@
 
 # This is for Couchbase Server specific attribute
 
-set_unless[:db_couchbase][:bucket][:type] = "sasl"
 set_unless[:db_couchbase][:bucket][:name] = "default"
 set_unless[:db_couchbase][:bucket][:password] = ""
 set_unless[:db_couchbase][:bucket][:ram] = "2000"
