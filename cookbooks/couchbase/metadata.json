@@ -21,8 +21,30 @@
   "replacing": {
   },
   "attributes": {
+    "db_couchbase/cluster/username": {
+      "description": "Cluster REST/Web Administrator Username",
+      "recipes": [
+        "couchbase::default"
+      ],
+      "calculated": false,
+      "type": "string",
+      "default": "Administrator",
+      "display_name": "Cluster REST/Web Username",
+      "required": "optional"
+    },
+    "db_couchbase/cluster/password": {
+      "description": "Cluster REST/Web Administrator Password",
+      "recipes": [
+        "couchbase::default"
+      ],
+      "calculated": false,
+      "type": "string",
+      "default": "password",
+      "display_name": "Cluster REST/Web Password",
+      "required": "optional"
+    },
     "db_couchbase/bucket/name": {
-      "description": "bucket name",
+      "description": "Bucket Name",
       "recipes": [
         "couchbase::default"
       ],
@@ -32,52 +54,30 @@
       "display_name": "Bucket Name",
       "required": "optional"
     },
-    "db_couchbase/cluster/username": {
-      "description": "Web Admin Username",
-      "recipes": [
-        "couchbase::default"
-      ],
-      "calculated": false,
-      "type": "string",
-      "default": "Administrator",
-      "display_name": "Web Admin Username",
-      "required": "optional"
-    },
-    "db_couchbase/cluster/password": {
-      "description": "Web Admin Password",
-      "recipes": [
-        "couchbase::default"
-      ],
-      "calculated": false,
-      "type": "string",
-      "default": "Administrator",
-      "display_name": "Web Admin Password",
-      "required": "optional"
-    },
     "db_couchbase/bucket/password": {
-      "description": "bucket password",
+      "description": "Bucket Password",
       "recipes": [
         "couchbase::default"
       ],
       "calculated": false,
       "type": "string",
       "default": "",
-      "display_name": "Bucket Sasl Password",
+      "display_name": "Bucket Password",
       "required": "optional"
     },
     "db_couchbase/bucket/ram": {
-      "description": "bucket ram",
+      "description": "Bucket RAM Quota in MB",
       "recipes": [
         "couchbase::default"
       ],
       "calculated": false,
       "type": "string",
       "default": "4000",
-      "display_name": "Bucket Quota",
+      "display_name": "Bucket RAM Quota",
       "required": "optional"
     },
     "db_couchbase/bucket/replica": {
-      "description": "bucket replica",
+      "description": "Bucket Replica Count",
       "recipes": [
         "couchbase::default"
       ],
