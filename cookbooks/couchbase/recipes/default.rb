@@ -13,7 +13,7 @@ couchbase_package = "couchbase-server-#{couchbase_edition}_x86_64_#{couchbase_ve
 
 log "downloading #{couchbase_package}"
 
-if node[:platform] =~ /redhat|centos/ and not File.exists?("/tmp/#{couchbase_package}")
+if not File.exists?("/tmp/#{couchbase_package}")
   remote_file "/tmp/#{couchbase_package}" do
     source "http://packages.couchbase.com/releases/#{couchbase_version}/#{couchbase_package}"
     mode "0644"
