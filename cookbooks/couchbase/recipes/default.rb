@@ -23,17 +23,17 @@ end
 log "installing #{couchbase_package}"
 
 package "couchbase-server" do
-  action :install
   source "/tmp/#{couchbase_package}"
   provider Chef::Provider::Package::Rpm
+  action :install
 end
 
 log "configuring #{couchbase_package}"
 
+log("/opt/couchbase/bin/couchbase-cli cluster-init" +
+    "        -c 127.0.0.1:8091" +
+    "        --cluster-init-username=#{node[:db_couchbase][:cluster][:username]}")
 execute "initializing cluster with username: #{node[:db_couchbase][:cluster][:username]}" do
-  log("/opt/couchbase/bin/couchbase-cli cluster-init" +
-      "        -c 127.0.0.1:8091" +
-      "        --cluster-init-username=#{node[:db_couchbase][:cluster][:username]}")
   command("sleep 10" +
           " && /opt/couchbase/bin/couchbase-cli cluster-init" +
           "        -c 127.0.0.1:8091" +
@@ -42,14 +42,14 @@ execute "initializing cluster with username: #{node[:db_couchbase][:cluster][:us
   action :run
 end
 
+log("/opt/couchbase/bin/couchbase-cli bucket-create" +
+    "    -c 127.0.0.1:8091" +
+    "    -u #{node[:db_couchbase][:cluster][:username]}" +
+    "    --bucket=#{node[:db_couchbase][:bucket][:name]}" +
+    "    --bucket-type=couchbase" +
+    "    --bucket-ramsize=#{node[:db_couchbase][:bucket][:ram]}" +
+    "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]}")
 execute "creating bucket: #{node[:db_couchbase][:bucket][:name]}" do
-  log("/opt/couchbase/bin/couchbase-cli bucket-create" +
-      "    -c 127.0.0.1:8091" +
-      "    -u #{node[:db_couchbase][:cluster][:username]}" +
-      "    --bucket=#{node[:db_couchbase][:bucket][:name]}" +
-      "    --bucket-type=couchbase" +
-      "    --bucket-ramsize=#{node[:db_couchbase][:bucket][:ram]}" +
-      "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]}")
   command("/opt/couchbase/bin/couchbase-cli bucket-create" +
           "    -c 127.0.0.1:8091" +
           "    -u #{node[:db_couchbase][:cluster][:username]}" +
