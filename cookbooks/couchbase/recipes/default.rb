@@ -20,13 +20,17 @@ if not File.exists?("/tmp/#{couchbase_package}")
   end
 end
 
+log "installing #{couchbase_package}"
+
 package "couchbase-server" do
   action :install
   source "/tmp/#{couchbase_package}"
   provider Chef::Provider::Package::Rpm
 end
 
-execute "initialize couchbase cluster with username:#{node[:db_couchbase][:cluster][:username]}" do
+log "configuring #{couchbase_package}"
+
+execute "initializing cluster with username: #{node[:db_couchbase][:cluster][:username]}" do
   log("/opt/couchbase/bin/couchbase-cli cluster-init" +
       "        -c 127.0.0.1:8091" +
       "        --cluster-init-username=#{node[:db_couchbase][:cluster][:username]}")
@@ -38,7 +42,7 @@ execute "initialize couchbase cluster with username:#{node[:db_couchbase][:clust
   action :run
 end
 
-execute "create bucket" do
+execute "creating bucket: #{node[:db_couchbase][:bucket][:name]}" do
   log("/opt/couchbase/bin/couchbase-cli bucket-create" +
       "    -c 127.0.0.1:8091" +
       "    -u #{node[:db_couchbase][:cluster][:username]}" +
