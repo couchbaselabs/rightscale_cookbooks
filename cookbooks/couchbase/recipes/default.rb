@@ -42,6 +42,11 @@ execute "initializing cluster with username: #{node[:db_couchbase][:cluster][:us
   action :run
 end
 
+# key - block_device/devices/device1/mount_point
+# val - /mnt/storage1
+
+log("device1 mount_point: #{node[:block_device][:devices][:device1][:mount_point]}")
+
 log("/opt/couchbase/bin/couchbase-cli bucket-create" +
     "    -c 127.0.0.1:8091" +
     "    -u #{node[:db_couchbase][:cluster][:username]}" +
