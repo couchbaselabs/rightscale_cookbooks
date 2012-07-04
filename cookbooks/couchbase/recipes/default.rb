@@ -42,10 +42,34 @@ execute "initializing cluster with username: #{node[:db_couchbase][:cluster][:us
   action :run
 end
 
-# key - block_device/devices/device1/mount_point
-# val - /mnt/storage1
+unless (node[:block_device].nil? or
+        node[:block_device][:devices].nil? or
+        node[:block_device][:devices][:device1].nil? or
+        node[:block_device][:devices][:device1][:mount_point].nil?)
+  mount_point = node[:block_device][:devices][:device1][:mount_point]
 
-log("device1 mount_point: #{node[:block_device][:devices][:device1][:mount_point]}")
+  log "configuring to mount_point: #{mount_point}"
+
+  execute "stopping server" do
+    command "/etc/init.d/couchbase-server stop"
+    action :run
+  end
+
+  execute "moving directory" do
+    command "mv /opt/couchbase #{mount_point}"
+    action :run
+  end
+
+  execute "symlinking directory" do
+    command "ln -s #{mount_point}/couchbase /opt/"
+    action :run
+  end
+
+  execute "starting server" do
+    command "/etc/init.d/couchbase-server start"
+    action :run
+  end
+end
 
 log("/opt/couchbase/bin/couchbase-cli bucket-create" +
     "    -c 127.0.0.1:8091" +
