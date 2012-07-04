@@ -51,7 +51,7 @@ unless (node[:block_device].nil? or
   log "configuring to mount_point: #{mount_point}"
 
   execute "stopping server" do
-    command "/etc/init.d/couchbase-server stop"
+    command "/etc/init.d/couchbase-server stop && sleep 5"
     action :run
   end
 
@@ -66,7 +66,7 @@ unless (node[:block_device].nil? or
   end
 
   execute "starting server" do
-    command "/etc/init.d/couchbase-server start"
+    command "/etc/init.d/couchbase-server start && sleep 10"
     action :run
   end
 end
