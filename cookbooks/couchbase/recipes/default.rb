@@ -91,12 +91,15 @@ execute "creating bucket: #{node[:db_couchbase][:bucket][:name]}" do
   action :run
 end
 
-log("node_public_ips: searching...")
+cluster_tag = node[:db_couchbase][:cluster][:tag]
+log("db_couchbase/cluster/tag: #{cluster_tag}")
 
-node_public_ips = search(:node, "name:#{node.name.split('-').first}-*").map do |n|
-  n[:cloud][:public_ips]
+if cluster_tag and !cluster_tag.empty?
+  log("auto-joining nodes search...")
+  node_public_ips = search(:node, "name:db_couchbase_cluster_tag:#{node[:db_couchbase][:cluster][:tag]}").map do |n|
+    n[:cloud][:public_ips][0]
+  end
+  log("auto-joining nodes: #{node_public_ips}")
 end
-
-log("node_public_ips: #{node_public_ips}")
 
 rightscale_marker :end
