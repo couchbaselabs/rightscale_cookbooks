@@ -91,4 +91,12 @@ execute "creating bucket: #{node[:db_couchbase][:bucket][:name]}" do
   action :run
 end
 
+log("node_public_ips: searching...")
+
+node_public_ips = search(:node, "name:#{node.name.split('-').first}-*").map do |n|
+  n[:cloud][:public_ips]
+end
+
+log("node_public_ips: #{node_public_ips}")
+
 rightscale_marker :end
