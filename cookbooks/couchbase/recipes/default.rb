@@ -94,12 +94,14 @@ end
 cluster_tag = node[:db_couchbase][:cluster][:tag]
 log("db_couchbase/cluster/tag: #{cluster_tag}")
 
-if cluster_tag and !cluster_tag.empty?
-  log("auto-joining nodes search...")
-  node_public_ips = search(:node, "name:db_couchbase_cluster_tag:#{node[:db_couchbase][:cluster][:tag]}").map do |n|
-    n[:cloud][:public_ips][0]
-  end
-  log("auto-joining nodes: #{node_public_ips}")
-end
+# TODO: Need to replace a search()-based approach with a rs_tag-based approach.
+#
+# if cluster_tag and !cluster_tag.empty?
+#   log("auto-joining nodes search...")
+#   node_public_ips = search(:node, "name:db_couchbase_cluster_tag:#{node[:db_couchbase][:cluster][:tag]}").map do |n|
+#     n[:cloud][:public_ips][0]
+#   end
+#   log("auto-joining nodes: #{node_public_ips}")
+# end
 
 rightscale_marker :end
