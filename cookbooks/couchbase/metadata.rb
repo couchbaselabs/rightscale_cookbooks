@@ -3,7 +3,7 @@ maintainer_email "support@couchbase.com"
 license          "Copyright Couchbase, Inc. Copyright RightScale, Inc. All rights reserved."
 description      "Installs/Configures Couchbase Server"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.rdoc'))
-version          "0.1.4"
+version          "0.1.5"
 
 depends "rightscale"
 

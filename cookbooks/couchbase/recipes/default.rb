@@ -96,10 +96,13 @@ log("db_couchbase/cluster/tag: #{cluster_tag}")
 
 if cluster_tag and !cluster_tag.empty?
   now = DateTime.now.strftime("%Y%m%d-%H%M%S.%L")
+  log("clustering - now is #{now}")
 
   unless `which rs_tag`.empty?
-    ip = ENV["EC2_LOCAL_IPV4"]
+    ip = node[:cloud][:private_ips][0]
     if ip
+      log("clustering - private ip is #{ip}")
+
       `rs_tag -a "couchbase-cluster-tag:#{cluster_tag}=#{now}:#{ip}:couchbase"`
 
       execute("clustering: #{cluster_tag}") do
@@ -143,7 +146,7 @@ if cluster_tag and !cluster_tag.empty?
         end
       end
     else
-      log("clustering - error: no local ip")
+      log("clustering - error: no cloud private ip")
     end
   else
     log("clustering: error: could not find rs_tag")
