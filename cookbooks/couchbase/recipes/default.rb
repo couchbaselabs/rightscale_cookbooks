@@ -149,8 +149,10 @@ if cluster_tag and !cluster_tag.empty?
       log("clustering - error: no cloud private ip")
     end
   else
-    log("clustering: error: could not find rs_tag")
+    log("clustering - error: could not find rs_tag")
   end
+else
+  log("clustering - skipped, no cluster_tag")
 end
 
 rightscale_marker :end
