@@ -104,5 +104,5 @@
   "recipes": {
     "couchbase::default": "Install Couchbase Server specific packages. Setup Couchbase Server specific default attributes"
   },
-  "version": "0.1.6"
+  "version": "0.1.7"
 }

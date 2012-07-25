@@ -103,7 +103,15 @@ if cluster_tag and !cluster_tag.empty?
     if ip
       log("clustering - private ip is #{ip}")
 
-      `rs_tag -a "couchbase-cluster-tag:#{cluster_tag}=#{now}:#{ip}:couchbase"`
+      add_cmd = "rs_tag -a couchbase-cluster-tag:#{cluster_tag}=#{now}:#{ip}:couchbase"
+      log("clustering - rs_tag add cmd: #{add_cmd}")
+      add_res = `#{add_cmd}`
+      log("clustering - rs_tag add res: #{add_res}")
+
+      qry_cmd = "rs_tag -q couchbase-cluster-tag:#{cluster_tag}"
+      log("clustering - rs_tag qry cmd: #{qry_cmd}")
+      qry_res = `#{qry_cmd}`
+      log("clustering - rs_tag qry res: #{qry_res}")
 
       username = node[:db_couchbase][:cluster][:username]
       password = node[:db_couchbase][:cluster][:password]
