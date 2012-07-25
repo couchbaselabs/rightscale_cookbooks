@@ -105,45 +105,43 @@ if cluster_tag and !cluster_tag.empty?
 
       `rs_tag -a "couchbase-cluster-tag:#{cluster_tag}=#{now}:#{ip}:couchbase"`
 
-      execute("clustering: #{cluster_tag}") do
-        username = node[:db_couchbase][:cluster][:username]
-        password = node[:db_couchbase][:cluster][:password]
+      username = node[:db_couchbase][:cluster][:username]
+      password = node[:db_couchbase][:cluster][:password]
 
-        cmd = "/opt/couchbase/bin/couchbase-cli server-list" +
-          " -c 127.0.0.1" +
-          " -u #{username}" +
-          " -p #{password}"
-        known_hosts = `#{cmd}`.strip
-        unless known_hosts.match(/^ERROR:/)
-          if known_hosts.split("\n").length <= 1
-            cmd = "rs_tag -q couchbase-cluster-tag:#{cluster_tag}" +
-              " | grep couchbase-cluster-tag:#{cluster_tag}=" +
-              " | grep -v :#{ip}:couchbase" +
-              " | cut -d '=' -f 2 | cut -d '\"' -f 1 | sort | cut -d ':' -f 2"
-            private_ips = `#{cmd}`.strip.split("\n")
-            if private_ips.length >= 1
-              cmd = "/opt/couchbase/bin/couchbase-cli server-add" +
-                " -c #{private_ips[0]}" +
-                " -u #{username}" +
-                " -p #{password}" +
-                " --server-add=self" +
-                " --server-add-username=#{username}" +
-                " --server-add-password=#{password}"
-              join = `#{cmd}`
-              if join.match(/SUCCESS/)
-                log("clustering - server added")
-              else
-                log("clustering - error: server add failed; " + join)
-              end
+      cmd = "/opt/couchbase/bin/couchbase-cli server-list" +
+        " -c 127.0.0.1" +
+        " -u #{username}" +
+        " -p #{password}"
+      known_hosts = `#{cmd}`.strip
+      unless known_hosts.match(/^ERROR:/)
+        if known_hosts.split("\n").length <= 1
+          cmd = "rs_tag -q couchbase-cluster-tag:#{cluster_tag}" +
+            " | grep couchbase-cluster-tag:#{cluster_tag}=" +
+            " | grep -v :#{ip}:couchbase" +
+            " | cut -d '=' -f 2 | cut -d '\"' -f 1 | sort | cut -d ':' -f 2"
+          private_ips = `#{cmd}`.strip.split("\n")
+          if private_ips.length >= 1
+            cmd = "/opt/couchbase/bin/couchbase-cli server-add" +
+              " -c #{private_ips[0]}" +
+              " -u #{username}" +
+              " -p #{password}" +
+              " --server-add=self" +
+              " --server-add-username=#{username}" +
+              " --server-add-password=#{password}"
+            join = `#{cmd}`
+            if join.match(/SUCCESS/)
+              log("clustering - server added")
             else
-              log("clustering - no other servers to join")
+              log("clustering - error: server add failed; " + join)
             end
           else
-            log("clustering - already joined")
+            log("clustering - no other servers to join")
           end
         else
-          log("clustering - error: could not retrieve server-list")
+            log("clustering - already joined")
         end
+      else
+        log("clustering - error: could not retrieve server-list")
       end
     else
       log("clustering - error: no cloud private ip")
