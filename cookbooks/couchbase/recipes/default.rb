@@ -120,14 +120,18 @@ if cluster_tag and !cluster_tag.empty?
         " -c 127.0.0.1" +
         " -u #{username}" +
         " -p #{password}"
+      log("clustering - server-list cmd: #{cmd}")
       known_hosts = `#{cmd}`.strip
+      log("clustering - server-list res: #{known_hosts}")
       unless known_hosts.match(/^ERROR:/)
         if known_hosts.split("\n").length <= 1
           cmd = "rs_tag -q couchbase_cluster_tag:#{cluster_tag}" +
             " | grep couchbase_cluster_tag:#{cluster_tag}=" +
             " | grep -v :#{ip}:couchbase" +
             " | cut -d '=' -f 2 | cut -d '\"' -f 1 | sort | cut -d ':' -f 2"
+          log("clustering - rs_tag private_ip qry: #{cmd}")
           private_ips = `#{cmd}`.strip.split("\n")
+          log("clustering - rs_tag private_ip res: #{private_ips}")
           if private_ips.length >= 1
             cmd = "/opt/couchbase/bin/couchbase-cli server-add" +
               " -c #{private_ips[0]}" +
@@ -136,7 +140,9 @@ if cluster_tag and !cluster_tag.empty?
               " --server-add=self" +
               " --server-add-username=#{username}" +
               " --server-add-password=#{password}"
+            log("clustering - server-add cmd: #{cmd}")
             join = `#{cmd}`
+            log("clustering - server-add res: #{join}")
             if join.match(/SUCCESS/)
               log("clustering - server added")
             else
