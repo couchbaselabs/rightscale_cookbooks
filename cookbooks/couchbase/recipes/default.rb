@@ -103,12 +103,12 @@ if cluster_tag and !cluster_tag.empty?
     if ip
       log("clustering - private ip is #{ip}")
 
-      add_cmd = "rs_tag -a couchbase-cluster-tag:#{cluster_tag}=#{now}:#{ip}:couchbase"
+      add_cmd = "rs_tag -a couchbase_cluster_tag:#{cluster_tag}=#{now}:#{ip}:couchbase"
       log("clustering - rs_tag add cmd: #{add_cmd}")
       add_res = `#{add_cmd}`
       log("clustering - rs_tag add res: #{add_res}")
 
-      qry_cmd = "rs_tag -q couchbase-cluster-tag:#{cluster_tag}"
+      qry_cmd = "rs_tag -q couchbase_cluster_tag:#{cluster_tag}"
       log("clustering - rs_tag qry cmd: #{qry_cmd}")
       qry_res = `#{qry_cmd}`
       log("clustering - rs_tag qry res: #{qry_res}")
@@ -123,8 +123,8 @@ if cluster_tag and !cluster_tag.empty?
       known_hosts = `#{cmd}`.strip
       unless known_hosts.match(/^ERROR:/)
         if known_hosts.split("\n").length <= 1
-          cmd = "rs_tag -q couchbase-cluster-tag:#{cluster_tag}" +
-            " | grep couchbase-cluster-tag:#{cluster_tag}=" +
+          cmd = "rs_tag -q couchbase_cluster_tag:#{cluster_tag}" +
+            " | grep couchbase_cluster_tag:#{cluster_tag}=" +
             " | grep -v :#{ip}:couchbase" +
             " | cut -d '=' -f 2 | cut -d '\"' -f 1 | sort | cut -d ':' -f 2"
           private_ips = `#{cmd}`.strip.split("\n")
