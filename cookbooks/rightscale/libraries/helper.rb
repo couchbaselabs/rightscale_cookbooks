@@ -10,6 +10,9 @@ module RightScale
     module Helper
       NAMESPACE_REGEX = '[a-z](?:[a-z0-9_]*)'
       PREDICATE_REGEX = '[a-zA-Z0-9%_\+\.-](?:[a-zA-Z0-9%_\+\.-]*)'
+      # The following regex matches valid IP addresses. It is obtained from
+      # http://www.regular-expressions.info/examples.html
+      IPADDRESS_REGEX = '\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'
 
       # Determines if a tag matches a given wildcard expression or prefix.
       #
@@ -25,7 +28,7 @@ module RightScale
         end
 
         File.fnmatch?(wildcard, tag)
-      end # def self.matches_tag_wildcard?(wildcard, tag)
+      end
 
       # Filters a server collection to only include servers with all of the supplied tags.
       #
@@ -44,7 +47,7 @@ module RightScale
 
           reject
         end.to_hash
-      end # def self.filter_tags(collection, name, tags)
+      end
 
       # Filters a server collection to only include servers with all of the supplied tags modifying the given server collection.
       #
@@ -55,7 +58,7 @@ module RightScale
       # @return [Hash] A filtered server collection
       def self.filter_tags!(collection, name, tags)
         collection[name] = filter_tags(collection, name, tags)
-      end # def self.filter_tags!(collection, name, tags)
+      end
 
       # Get the value portion of a tag with a given prefix from a list of tags.
       #
@@ -68,8 +71,16 @@ module RightScale
         if tags.detect { |tag| tag =~ /^#{Regexp.escape(prefix)}=(#{capture})$/ }
           $1
         end
-      end # def self.get_tag_value(prefix, tags, capture = '.*')
+      end
 
+      # Returns true if a valid IP address is give and false if it is invalid
+      #
+      # @param [String] ip IP addres
+      #
+      # @return [Bool] True if the IP address is valid and false if it is invalid
+      def self.is_valid_ip?(ip)
+        ip =~ /^#{IPADDRESS_REGEX}$/
+      end
     end
   end
 end

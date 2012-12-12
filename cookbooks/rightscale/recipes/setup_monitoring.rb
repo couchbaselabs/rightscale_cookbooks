@@ -20,8 +20,8 @@ package "librrd4" if node[:platform] == 'ubuntu'
 
 installed_ver = (node[:platform] =~ /redhat|centos/) ? `rpm -q --queryformat %{VERSION} collectd`.strip : `dpkg-query --showformat='${Version}' -W collectd`.strip
 installed = (installed_ver == "") ? false : true
-log 'Collectd package not installed' unless installed
-log "Checking installed collectd version: installed #{installed_ver}" if installed
+log "  Collectd package not installed" unless installed
+log "  Checking installed collectd version: installed #{installed_ver}" if installed
 
 # Remove existing version of collectd
 
@@ -35,7 +35,7 @@ end
 
 # Install collectd packages
 collectd_version = node[:rightscale][:collectd_packages_version]
-log "Installing collectd package(s) version #{collectd_version}"
+log "  Installing collectd package(s) version #{collectd_version}"
 packages = node[:rightscale][:collectd_packages]
 packages.each do |p|
   package p do
@@ -45,7 +45,7 @@ packages.each do |p|
 end
 
 # If APT, pin this package version so it can't be updated.
-remote_file "/etc/apt/preferences.d/00rightscale" do
+cookbook_file "/etc/apt/preferences.d/00rightscale" do
   only_if { node[:platform] == "ubuntu" }
   source "apt.preferences.rightscale"
 end
@@ -107,7 +107,7 @@ end
 # Patch collectd init script, so it uses collectdmon.
 # Only needed for CentOS, Ubuntu already does this out of the box.
 if node[:platform] =~ /redhat|centos/
-  remote_file "/etc/init.d/collectd" do
+  cookbook_file "/etc/init.d/collectd" do
     source "collectd-init-centos-with-monitor"
     mode 0755
     notifies :restart, resources(:service => "collectd")
@@ -115,7 +115,7 @@ if node[:platform] =~ /redhat|centos/
 end
 
 # Tag required to enable monitoring
-#
+# See http://support.rightscale.com/12-Guides/Chef_Cookbooks_Developer_Guide/Chef_Resources#RightLinkTag for the "right_link_tag" resource.
 right_link_tag "rs_monitoring:state=active"
 
 # Start monitoring

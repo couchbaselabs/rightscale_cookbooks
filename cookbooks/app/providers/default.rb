@@ -26,10 +26,16 @@ action :restart do
 end
 
 
+# Reload application
+action :reload do
+  raise 'Using "default" application provider.  Action is not implemented'
+end
+
+
 action :install do
   # Install user-specified Packages and Modules
   packages = new_resource.packages
-  log "Packages which will be installed #{packages}"
+  log "  Packages which will be installed #{packages}"
 
   packages.each do |p|
     package p
@@ -46,6 +52,12 @@ end
 # Setup application Database Connection
 action :setup_db_connection do
   raise 'Using "default" application provider.  Action is not implemented'
+end
+
+
+# Set monitoring tools for application
+action :setup_monitoring do
+  raise 'Using "default" application provider. Action is not implemented'
 end
 
 

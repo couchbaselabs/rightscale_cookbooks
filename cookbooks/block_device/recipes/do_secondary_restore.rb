@@ -15,6 +15,13 @@ class Chef::Resource::BlockDevice
   include RightScale::BlockDeviceHelper
 end
 
+# Similar to primary_restore, we set the lineage and timestamp override inputs
+# to choose snapshot to be restored. Set up secondary cloud credentials from
+# which the snapshot needs to be retrieved.
+# See cookbooks/block_device/providers/default.rb for secondary_restore action
+# implementation and cookbooks/block_device/libraries/block_device.rb for
+# "do_for_block_devices" and "get_device_or_default".
+#
 do_for_block_devices node[:block_device] do |device|
   # Do the restore.
   log "  Creating block device and restoring data from secondary backup for device #{device}..."
@@ -34,7 +41,7 @@ do_for_block_devices node[:block_device] do |device|
     timestamp_override restore_timestamp_override
 
     secondary_cloud get_device_or_default(node, device, :backup, :secondary, :cloud)
-    secondary_endpoint get_device_or_default(node, device, :backup, :secondary, :endpoint)
+    secondary_endpoint get_device_or_default(node, device, :backup, :secondary, :endpoint) || ""
     secondary_container get_device_or_default(node, device, :backup, :secondary, :container)
     secondary_user get_device_or_default(node, device, :backup, :secondary, :cred, :user)
     secondary_secret get_device_or_default(node, device, :backup, :secondary, :cred, :secret)

@@ -6,15 +6,16 @@
 # RightScale Terms of Service available at http://www.rightscale.com/terms.php and,
 # if applicable, other agreements such as a RightScale Master Subscription Agreement.
 
-
 rightscale_marker :begin
 
 raise "  Error: repo URL input is unset. Please fill 'Repository Url' input" if node[:repo][:default][:repository].empty?
 
-# Downloading project repository
+# Download project repository.
+# Either the "pull" or the "capistrano_pull" action is passed by user input.
+# See cookbooks/repo_<provider>/providers/default.rb for the action method.
 repo "default" do
   destination node[:repo][:default][:destination]
-  action      node[:repo][:default][:perform_action].to_sym
+  action node[:repo][:default][:perform_action].to_sym
 end
 
 rightscale_marker :end

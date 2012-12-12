@@ -9,15 +9,12 @@
 # Since this backup is a snapshot of a filesystem, it will check if the database has
 # been 'initialized', else it will fail.
 #
-# @param [Boolean] force If false, if a backup is currently running, will error out stating so.
-#   If true, if a backup is currently running, will kill that process and take over the lock.
 # @param [String] backup_type If 'primary' will do a primary backup using node attributes specific
 #   to the main backup.  If 'secondary' will do a secondary backup using node attributes for
 #   secondary.  Secondary uses 'ROS'.
 #
-# @raises [RuntimeError] If force is false and a backup is currently running, will raise an exception.
-# @raises [RuntimeError] If database is not 'initialized'
-define :db_do_backup, :force => false, :backup_type => "primary" do
+# @raise [RuntimeError] If database is not 'initialized'
+define :db_do_backup, :backup_type => "primary" do
 
   class Chef::Recipe
     include RightScale::BlockDeviceHelper
@@ -27,59 +24,61 @@ define :db_do_backup, :force => false, :backup_type => "primary" do
     include RightScale::BlockDeviceHelper
   end
 
+  # See cookbooks/block_device/libraries/block_device.rb for the "get_device_or_default" method.
   NICKNAME = get_device_or_default(node, :device1, :nickname)
   DATA_DIR = node[:db][:data_dir]
 
-  do_force        = params[:force]
   do_backup_type  = params[:backup_type] == "primary" ? "primary" : "secondary"
+
+  log "  Checking db_init_status making sure db ready for backup"
 
   # Check if database is able to be backed up (initialized)
   # must be done in ruby block to expand node during converge not compile
-  log "  Checking db_init_status making sure db ready for backup"
+  # See cookbooks/db/definitions/db_init_status.rb for the "db_init_status" definition.
   db_init_status :check do
     expected_state :initialized
     error_message "Database not initialized."
   end
 
-  # Verify initalized database
-  # Check the node state to verify that we have correctly initialized this server.
+  # Verify initialized database
+  # Check database state to verify that we have correctly initialized this server.
+  # See cookbooks/db/defintion/db_state_assert.rb for the "db_state_assert" definition.
   db_state_assert :either
 
   log "  Performing pre-backup check..."
+  # See cookbooks/db_<provider>/providers/default.rb for the "pre_backup_check" action.
   db DATA_DIR do
     action :pre_backup_check
   end
 
-  # Acquire the backup lock or die
-  #
-  # This lock is released in the 'backup' script for now.
-  # See below for more information about 'backup'
-  # if 'force' is true, kills pid and removes locks
-  block_device NICKNAME do
-    action :backup_lock_take
-    force do_force
-  end
+  log "Timeout is #{node[:db][:init_timeout]}"
 
   log "  Performing (#{do_backup_type} backup) lock DB and write backup info file..."
+  # See cookbooks/db_<provider>/providers/default.rb for the "lock" and "write_backup_info" actions.
   db DATA_DIR do
+    timeout node[:db][:init_timeout]
     action [ :lock, :write_backup_info ]
   end
 
   log "  Performing (#{do_backup_type} backup) Snapshot with lineage #{node[:db][:backup][:lineage]}.."
   # Requires block_device node[:db][:block_device] to be instantiated
   # previously. Make sure block_device::default recipe has been run.
+  # See cookbooks/block_device/providers/default.rb for the "snapshot" action.
   block_device NICKNAME do
     action :snapshot
   end
 
   log "  Performing unlock DB..."
+  # See cookbooks/db_<provider>/providers/defaul.rb for the "unlock" action.
   db DATA_DIR do
     action :unlock
   end
 
   log "  Performing (#{do_backup_type}) Backup of lineage #{node[:db][:backup][:lineage]} and post-backup cleanup..."
+  # See cookbooks/block_device/libraries/block_device.rb for the "get_device_or_default" method.
+  # See cookbooks/block_device/providers/default.rb for the "primary_backup" and "secondary_backup" actions.
   block_device NICKNAME do
-    # Backup/Restore arguments
+    # Select the device to backup and set up arguments required for backup.
     lineage node[:db][:backup][:lineage]
     max_snapshots get_device_or_default(node, :device1, :backup, :primary, :keep, :max_snapshots)
     keep_daily get_device_or_default(node, :device1, :backup, :primary, :keep, :keep_daily)
@@ -89,7 +88,7 @@ define :db_do_backup, :force => false, :backup_type => "primary" do
 
     # Secondary arguments
     secondary_cloud get_device_or_default(node, :device1, :backup, :secondary, :cloud)
-    secondary_endpoint get_device_or_default(node, :device1, :backup, :secondary, :endpoint)
+    secondary_endpoint get_device_or_default(node, :device1, :backup, :secondary, :endpoint) || ""
     secondary_container get_device_or_default(node, :device1, :backup, :secondary, :container)
     secondary_user get_device_or_default(node, :device1, :backup, :secondary, :cred, :user)
     secondary_secret get_device_or_default(node, :device1, :backup, :secondary, :cred, :secret)
@@ -98,11 +97,8 @@ define :db_do_backup, :force => false, :backup_type => "primary" do
   end
 
   log "  Performing post backup cleanup..."
+  # See cookbooks/db_<provider>/providers/default.rb for the "post_backup_cleanup" action.
   db DATA_DIR do
     action :post_backup_cleanup
-  end
-
-  block_device NICKNAME do
-    action :backup_lock_give
   end
 end

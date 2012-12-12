@@ -16,8 +16,10 @@ class Chef::Resource::BlockDevice
 end
 
 DATA_DIR = node[:db][:data_dir]
+# See cookbooks/block_device/libraries/block_device.rb for the "get_device_or_default" method.
 NICKNAME = get_device_or_default(node, :device1, :nickname)
 
+# See cookbooks/db/definitions/db_init_status.rb for the "db_init_status" definition.
 db_init_status :check do
   expected_state :uninitialized
   error_message "Database already restored.  To over write existing database run do_force_reset before this recipe"
@@ -25,11 +27,13 @@ end
 
 log "  Running pre-restore checks..."
 db DATA_DIR do
+  # See cookbooks/db_<provider>/providers/default.rb for the "pre_restore_check" action
   action :pre_restore_check
 end
 
 log "  Stopping database..."
 db DATA_DIR do
+  # See cookbooks/db_<provider>/providers/default.rb for the "stop" action.
   action :stop
 end
 
@@ -51,8 +55,9 @@ elsif secondary_storage_cloud =~ /rackspace/i
 end
 
 log "  Performing Secondary Restore from #{node[:db][:backup][:secondary_location]}..."
-# Requires block_device DATA_DIR to be instantiated
-# previously. Make sure block_device::default recipe has been run.
+# Requires block_device DATA_DIR to be previously instantiated.
+# Make sure block_device::default recipe has been run.
+# See cookbooks/block_device/providers/default.rb for the "secondary_restore" action.
 block_device NICKNAME do
   lineage restore_lineage
   timestamp_override restore_timestamp_override
@@ -60,7 +65,7 @@ block_device NICKNAME do
   volume_size get_device_or_default(node, :device1, :volume_size)
 
   secondary_cloud secondary_storage_cloud
-  secondary_endpoint get_device_or_default(node, :device1, :backup, :secondary, :endpoint)
+  secondary_endpoint get_device_or_default(node, :device1, :backup, :secondary, :endpoint) || ""
   secondary_container get_device_or_default(node, :device1, :backup, :secondary, :container)
   secondary_user get_device_or_default(node, :device1, :backup, :secondary, :cred, :user)
   secondary_secret get_device_or_default(node, :device1, :backup, :secondary, :cred, :secret)
@@ -69,16 +74,26 @@ block_device NICKNAME do
 end
 
 log "  Setting state of database to be 'initialized'..."
+# See cookbooks/db/definitions/db_init_status.rb for the "db_init_status" definition.
 db_init_status :set
 
 log "  Running post-restore cleanup..."
+# See cookbooks/db_<provider>/providers/default.rb for the "post_restore_cleanup" action.
 db DATA_DIR do
   action :post_restore_cleanup
 end
 
 log "  Starting database..."
+# See cookbooks/db_<provider>/providers/default.rb for the "start" and "status" actions.
 db DATA_DIR do
   action [ :start, :status ]
 end
+
+# Restoring admin and application user privileges
+# See cookbooks/db/definitions/db_set_privileges.rb for the "db_set_privileges" definition.
+db_set_privileges [
+  {:role => "administrator", :username => node[:db][:admin][:user], :password => node[:db][:admin][:password]},
+  {:role => "user", :username => node[:db][:application][:user], :password => node[:db][:application][:password]}
+]
 
 rightscale_marker :end

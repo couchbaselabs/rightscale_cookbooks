@@ -11,7 +11,7 @@ action :update do
 
   # Set local variables from attributes
   port = new_resource.port ? new_resource.port : new_resource.name
-  raise "ERROR: port must be set" if port == ""
+  raise "  ERROR: port must be set" if port == ""
   protocol = new_resource.protocol
   to_enable = new_resource.enable
   ip_addr = new_resource.ip_addr
@@ -36,20 +36,21 @@ action :update do
     log "Firewall not enabled. Not adding rule for #{port}."
   else
 
-    # Setup iptables rebuild resouce
+    # Setup iptables rebuild resource
     execute "rebuild-iptables" do
       command "/usr/sbin/rebuild-iptables"
       action :nothing
     end
 
     if machine_tag
+      # See http://support.rightscale.com/12-Guides/Chef_Cookbooks_Developer_Guide/Chef_Resources#Server_Collection for the "rightscale_server_collection" resource.
       rightscale_server_collection collection_name do
         tags machine_tag
         secondary_tags ip_tag
       end
     end
 
-    ruby_block 'Register all currently active app servers' do
+    ruby_block 'Adding firewall rule' do
       block do
         ip_list = []
 
@@ -60,19 +61,20 @@ action :update do
         if machine_tag
           valid_ip_regex = '(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
           ip_list = node[:server_collection][collection_name].collect do |_, tags|
+            # See cookbooks/rightscale/libraries/helper.rb for the "get_tag_value" definition.
             RightScale::Utils::Helper.get_tag_value(ip_tag, tags, valid_ip_regex)
           end
-        end # if tag
+        end
 
-        # Use iptables cookbook to create open/close port for ip list
         ip_list.each do |ip|
 
-          Chef::Log.info "Updating iptables rule for IP Address: #{ip}"
+          Chef::Log.info "  Updating iptables rule for IP Address: #{ip}"
 
           rule = "port_#{port}"
           rule << "_#{ip.gsub('/', '_')}_#{protocol}"
 
           # Programatically execute template resource
+          # See cookbooks/sys/libraries/helper.rb for the "run_template" definition.
           RightScale::System::Helper.run_template(
             "/etc/iptables.d/#{rule}", # target_file
             "iptables_port.erb", # source
@@ -85,16 +87,14 @@ action :update do
             to_enable, # enable
             "/usr/sbin/rebuild-iptables", # command to run
             node,
-            @run_context)
-        end # each
+            @run_context
+          )
+        end
+      end
+    end
+  end
 
-
-      end # block
-    end # ruby_block
-
-  end # else
-
-end # action
+end
 
 action :update_request do
 
@@ -122,6 +122,7 @@ action :update_request do
   attrs[:sys_firewall][:rule][:ip_address] = ip_addr
 
   # Use RightNet to update firewall rules on all tagged servers
+  # See http://support.rightscale.com/12-Guides/Chef_Cookbooks_Developer_Guide/Chef_Resources#RemoteRecipe for the "remote_recipe" resource.
   remote_recipe "Request firewall update" do
     recipe "sys_firewall::setup_rule"
     recipients_tags machine_tag

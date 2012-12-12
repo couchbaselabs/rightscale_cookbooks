@@ -7,7 +7,9 @@
 
 rightscale_marker :begin
 
-log "  Request all database close ports to this application server"
+log "  Request all databases close ports to this application server"
+
+# See cookbooks/db_<provider>/providers/default.rb for the "firewall_update_request" action.
 db node[:db][:data_dir] do
   machine_tag "database:active=true"
   enable false
