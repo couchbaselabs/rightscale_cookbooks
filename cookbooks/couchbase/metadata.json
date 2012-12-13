@@ -21,7 +21,7 @@
   "replacing": {
   },
   "attributes": {
-    "db_couchbase/version": {
+    "db_couchbase/edition": {
       "description": "Couchbase Server Edition",
       "recipes": [
         "couchbase::setup-2.0.0"
@@ -29,7 +29,7 @@
       "calculated": false,
       "type": "string",
       "default": "enterprise",
-      "display_name": "CCouchbase Server Edition",
+      "display_name": "Couchbase Server Edition",
       "required": "optional"
     },
    "db_couchbase/cluster/username": {
