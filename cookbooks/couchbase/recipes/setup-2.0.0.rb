@@ -30,6 +30,23 @@ end
 
 log "configuring #{couchbase_package}"
 
+unless (node[:block_device].nil? or
+        node[:block_device][:devices].nil? or
+        node[:block_device][:devices][:device1].nil? or
+        node[:block_device][:devices][:device1][:mount_point].nil?)
+  mount_point = node[:block_device][:devices][:device1][:mount_point]
+  execute "configure data path to use mount point:  #{mount_point}" do
+    command("sleep 5 && chown couchbase:couchbase #{mount_point} &&" +
+            " /opt/couchbase/bin/couchbase-cli node-init" +
+            "        --node-init-data-path=#{mount_point}" +
+            "        -c 127.0.0.1:8091" +
+            "        -u=#{node[:db_couchbase][:cluster][:username]}" +
+            "        -password=#{node[:db_couchbase][:cluster][:password]}")
+    action :run
+  end
+end
+
+
 log("/opt/couchbase/bin/couchbase-cli cluster-init" +
     "        -c 127.0.0.1:8091" +
     "        --cluster-init-username=#{node[:db_couchbase][:cluster][:username]}")
@@ -40,35 +57,6 @@ execute "initializing cluster with username: #{node[:db_couchbase][:cluster][:us
           "        --cluster-init-username=#{node[:db_couchbase][:cluster][:username]}" +
           "        --cluster-init-password=#{node[:db_couchbase][:cluster][:password]}")
   action :run
-end
-
-unless (node[:block_device].nil? or
-        node[:block_device][:devices].nil? or
-        node[:block_device][:devices][:device1].nil? or
-        node[:block_device][:devices][:device1][:mount_point].nil?)
-  mount_point = node[:block_device][:devices][:device1][:mount_point]
-
-  log "configuring to mount_point: #{mount_point}"
-
-  execute "stopping server" do
-    command "/etc/init.d/couchbase-server stop && sleep 5"
-    action :run
-  end
-
-  execute "moving directory" do
-    command "mv /opt/couchbase #{mount_point}"
-    action :run
-  end
-
-  execute "symlinking directory" do
-    command "ln -s #{mount_point}/couchbase /opt/"
-    action :run
-  end
-
-  execute "starting server" do
-    command "/etc/init.d/couchbase-server start"
-    action :run
-  end
 end
 
 log("sleep 10 && /opt/couchbase/bin/couchbase-cli bucket-create" +
