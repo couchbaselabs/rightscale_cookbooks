@@ -9,7 +9,15 @@ rightscale_marker :begin
 
 couchbase_edition = node[:db_couchbase][:edition]
 couchbase_version = "2.0.0"
-couchbase_package = "couchbase-server-#{couchbase_edition}_x86_64_#{couchbase_version}.rpm"
+
+couchbase_package = value_for_platform(
+  ["centos", "redhat", "suse", "fedora" ] => {
+    "default" => "couchbase-server-#{couchbase_edition}_x86_64_#{couchbase_version}.rpm"
+  },
+  ["ubuntu", "debian"] => {
+    "default" => "couchbase-server-#{couchbase_edition}_x86_64_#{couchbase_version}.deb"
+  }
+)
 
 log "downloading #{couchbase_package}"
 
@@ -24,8 +32,16 @@ log "installing #{couchbase_package}"
 
 package "couchbase-server" do
   source "/tmp/#{couchbase_package}"
-  provider Chef::Provider::Package::Rpm
-  action :install
+  if platform?("redhat", "centos", "suse", "fedora")
+    provider Chef::Provider::Package::Rpm
+    action :install
+  elsif platform?("ubuntu", "debian")
+    provider Chef::Provider:Package:Deb
+    action :install
+  else
+    log "unsupported source package #{couchbase_package}"
+    abort "unsupported source package #{couchbase_package}"
+  end
 end
 
 log "configuring #{couchbase_package}"
