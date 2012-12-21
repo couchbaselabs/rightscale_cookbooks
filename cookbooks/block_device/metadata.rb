@@ -166,7 +166,7 @@ end.each do |device, number|
     :display_name => "Total Volume Size (#{number})",
     :description => "Defines the total size of the LVM volume stripe set (in GB). For example, if the stripe_count is '3' and you specify '3' for this input, it will create an LVM volume stripe that contains 3 volumes that are each 1 GB in size. If an uneven ratio is defined, volume sizes will be rounded up to the nearest whole integer. Ignored on clouds that do not support volumes (e.g., Rackspace).",
     :required => device != 'device2' ? 'recommended' : 'optional',
-    :default => "10",
+    :default => "200",
     :recipes => [ "block_device::setup_block_device", "block_device::default" ]
 
   attribute "block_device/devices/#{device}/backup/lineage",
