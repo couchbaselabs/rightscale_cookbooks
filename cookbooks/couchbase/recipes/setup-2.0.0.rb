@@ -36,7 +36,7 @@ package "couchbase-server" do
     provider Chef::Provider::Package::Rpm
     action :install
   elsif platform?("ubuntu", "debian")
-    provider Chef::Provider:Package:Deb
+    provider Chef::Provider::Package::Deb
     action :install
   else
     log "unsupported source package #{couchbase_package}"
