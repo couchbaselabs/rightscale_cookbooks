@@ -85,17 +85,21 @@ log("sleep 10 && /opt/couchbase/bin/couchbase-cli bucket-create" +
     "    --bucket-type=couchbase" +
     "    --bucket-ramsize=#{node[:db_couchbase][:bucket][:ram]}" +
     "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]}")
-execute "creating bucket: #{node[:db_couchbase][:bucket][:name]}" do
-  command("sleep 10 && /opt/couchbase/bin/couchbase-cli bucket-create" +
-          "    -c 127.0.0.1:8091" +
-          "    -u #{node[:db_couchbase][:cluster][:username]}" +
-          "    -p #{node[:db_couchbase][:cluster][:password]}" +
-          "    --bucket=#{node[:db_couchbase][:bucket][:name]}" +
-          "    --bucket-type=couchbase" +
-          "    --bucket-password=\"#{node[:db_couchbase][:bucket][:password]}\"" +
-          "    --bucket-ramsize=#{node[:db_couchbase][:bucket][:ram]}" +
-          "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]}")
-  action :run
+begin
+  execute "creating bucket: #{node[:db_couchbase][:bucket][:name]}" do
+    command("sleep 10 && /opt/couchbase/bin/couchbase-cli bucket-create" +
+            "    -c 127.0.0.1:8091" +
+            "    -u #{node[:db_couchbase][:cluster][:username]}" +
+            "    -p #{node[:db_couchbase][:cluster][:password]}" +
+            "    --bucket=#{node[:db_couchbase][:bucket][:name]}" +
+            "    --bucket-type=couchbase" +
+            "    --bucket-password=\"#{node[:db_couchbase][:bucket][:password]}\"" +
+            "    --bucket-ramsize=#{node[:db_couchbase][:bucket][:ram]}" +
+            "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]}")
+    action :run
+  end
+rescue Exception => e
+    log e
 end
 
 cluster_tag = node[:db_couchbase][:cluster][:tag]
