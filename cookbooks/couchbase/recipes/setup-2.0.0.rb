@@ -46,22 +46,25 @@ end
 
 log "configuring #{couchbase_package}"
 
-unless (node[:block_device].nil? or
-        node[:block_device][:devices].nil? or
-        node[:block_device][:devices][:device1].nil? or
-        node[:block_device][:devices][:device1][:mount_point].nil?)
-  mount_point = node[:block_device][:devices][:device1][:mount_point]
-  execute "configure data path to use mount point:  #{mount_point}" do
-    command("sleep 5 && chown couchbase:couchbase #{mount_point} &&" +
-            " /opt/couchbase/bin/couchbase-cli node-init" +
-            "        --node-init-data-path=#{mount_point}" +
-            "        -c 127.0.0.1:8091" +
-            "        -u=#{node[:db_couchbase][:cluster][:username]}" +
-            "        -password=#{node[:db_couchbase][:cluster][:password]}")
-    action :run
+begin
+  unless (node[:block_device].nil? or
+          node[:block_device][:devices].nil? or
+          node[:block_device][:devices][:device1].nil? or
+          node[:block_device][:devices][:device1][:mount_point].nil?)
+    mount_point = node[:block_device][:devices][:device1][:mount_point]
+    execute "configure data path to use mount point:  #{mount_point}" do
+      command("sleep 5 && chown couchbase:couchbase #{mount_point} &&" +
+              " /opt/couchbase/bin/couchbase-cli node-init" +
+              "        --node-init-data-path=#{mount_point}" +
+              "        -c 127.0.0.1:8091" +
+              "        -u=#{node[:db_couchbase][:cluster][:username]}" +
+              "        -password=#{node[:db_couchbase][:cluster][:password]}")
+      action :run
+    end
   end
+rescue Exception => e
+  log e
 end
-
 
 log("/opt/couchbase/bin/couchbase-cli cluster-init" +
     "        -c 127.0.0.1:8091" +
