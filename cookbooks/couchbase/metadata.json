@@ -24,7 +24,7 @@
     "db_couchbase/edition": {
       "description": "Couchbase Server Edition",
       "recipes": [
-        "couchbase::setup-2.0.0"
+        "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1"
       ],
       "calculated": false,
@@ -37,7 +37,7 @@
       "description": "Cluster REST/Web Administrator Username",
       "recipes": [
         "couchbase::default",
-        "couchbase::setup-2.0.0"
+        "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1"
       ],
       "calculated": false,
@@ -50,7 +50,7 @@
       "description": "Cluster REST/Web Administrator Password",
       "recipes": [
         "couchbase::default",
-        "couchbase::setup-2.0.0"
+        "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1"
       ],
       "calculated": false,
@@ -63,7 +63,7 @@
       "description": "Cluster Tag used to auto-join nodes of the same tag, when non-empty",
       "recipes": [
         "couchbase::default",
-        "couchbase::setup-2.0.0"
+        "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1"
       ],
       "calculated": false,
@@ -76,7 +76,7 @@
       "description": "Bucket Name",
       "recipes": [
         "couchbase::default",
-        "couchbase::setup-2.0.0"
+        "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1"
       ],
       "calculated": false,
@@ -89,7 +89,7 @@
       "description": "Bucket Password",
       "recipes": [
         "couchbase::default",
-        "couchbase::setup-2.0.0"
+        "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1"
       ],
       "calculated": false,
@@ -102,7 +102,7 @@
       "description": "Bucket RAM Quota in MB",
       "recipes": [
         "couchbase::default",
-        "couchbase::setup-2.0.0"
+        "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1"
       ],
       "calculated": false,
@@ -115,7 +115,7 @@
       "description": "Bucket Replica Count",
       "recipes": [
         "couchbase::default",
-        "couchbase::setup-2.0.0"
+        "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1"
       ],
       "calculated": false,
@@ -129,7 +129,7 @@
   },
   "recipes": {
     "couchbase::default": "Install Couchbase Server specific packages. Setup Couchbase Server specific default attributes",
-    "couchbase::setup-2.0.0": "Install Couchbase Server 2.0.0 packages. Setup Couchbase Server speicific default attributes"
+    "couchbase::setup-2.0.0": "Install Couchbase Server 2.0.0 packages. Setup Couchbase Server speicific default attributes",
     "couchbase::setup-2.0.1": "Install Couchbase Server 2.0.1 packages. Setup Couchbase Server speicific default attributes"
   },
   "version": "0.1.10"
