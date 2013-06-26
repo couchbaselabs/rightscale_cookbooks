@@ -25,7 +25,8 @@
       "description": "Couchbase Server Edition",
       "recipes": [
         "couchbase::setup-2.0.0",
-        "couchbase::setup-2.0.1"
+        "couchbase::setup-2.0.1",
+        "couchbase::setup-2.1.0"
       ],
       "calculated": false,
       "type": "string",
@@ -38,7 +39,8 @@
       "recipes": [
         "couchbase::default",
         "couchbase::setup-2.0.0",
-        "couchbase::setup-2.0.1"
+        "couchbase::setup-2.0.1",
+        "couchbase::setup-2.1.0"
       ],
       "calculated": false,
       "type": "string",
@@ -51,7 +53,8 @@
       "recipes": [
         "couchbase::default",
         "couchbase::setup-2.0.0",
-        "couchbase::setup-2.0.1"
+        "couchbase::setup-2.0.1",
+        "couchbase::setup-2.1.0"
       ],
       "calculated": false,
       "type": "string",
@@ -64,7 +67,8 @@
       "recipes": [
         "couchbase::default",
         "couchbase::setup-2.0.0",
-        "couchbase::setup-2.0.1"
+        "couchbase::setup-2.0.1",
+        "couchbase::setup-2.1.0"
       ],
       "calculated": false,
       "type": "string",
@@ -77,7 +81,8 @@
       "recipes": [
         "couchbase::default",
         "couchbase::setup-2.0.0",
-        "couchbase::setup-2.0.1"
+        "couchbase::setup-2.0.1",
+        "couchbase::setup-2.1.0"
       ],
       "calculated": false,
       "type": "string",
@@ -90,7 +95,8 @@
       "recipes": [
         "couchbase::default",
         "couchbase::setup-2.0.0",
-        "couchbase::setup-2.0.1"
+        "couchbase::setup-2.0.1",
+        "couchbase::setup-2.1.0"
       ],
       "calculated": false,
       "type": "string",
@@ -103,7 +109,8 @@
       "recipes": [
         "couchbase::default",
         "couchbase::setup-2.0.0",
-        "couchbase::setup-2.0.1"
+        "couchbase::setup-2.0.1",
+        "couchbase::setup-2.1.0"
       ],
       "calculated": false,
       "type": "string",
@@ -116,7 +123,8 @@
       "recipes": [
         "couchbase::default",
         "couchbase::setup-2.0.0",
-        "couchbase::setup-2.0.1"
+        "couchbase::setup-2.0.1",
+        "couchbase::setup-2.1.0"
       ],
       "calculated": false,
       "type": "string",
@@ -131,6 +139,7 @@
     "couchbase::default": "Install Couchbase Server specific packages. Setup Couchbase Server specific default attributes",
     "couchbase::setup-2.0.0": "Install Couchbase Server 2.0.0 packages. Setup Couchbase Server speicific default attributes",
     "couchbase::setup-2.0.1": "Install Couchbase Server 2.0.1 packages. Setup Couchbase Server speicific default attributes"
+    "couchbase::setup-2.1.0": "Install Couchbase Server 2.1.0 packages. Setup Couchbase Server speicific default attributes"
   },
   "version": "0.1.10"
 }
