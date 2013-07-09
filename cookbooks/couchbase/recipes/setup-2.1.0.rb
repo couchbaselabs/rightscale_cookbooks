@@ -134,6 +134,7 @@ if cluster_tag and !cluster_tag.empty?
       log("clustering - server-list cmd: #{cmd}")
       known_hosts = `#{cmd}`.strip
       log("clustering - server-list res: #{known_hosts}")
+      failed_cmd = "/etc/init.d/couchbase-server stop"
       unless known_hosts.match(/^ERROR:/)
         if known_hosts.split("\n").length <= 1
           cmd = "rs_tag -q couchbase_cluster_tag:#{cluster_tag}" +
@@ -144,13 +145,12 @@ if cluster_tag and !cluster_tag.empty?
           private_ips = `#{cmd}`.strip.split("\n")
           log("clustering - rs_tag private_ip res: #{private_ips}")
           if private_ips.length >= 1
-            sleep 15
 
             cmd = "/opt/couchbase/bin/couchbase-cli server-add" +
               " -c #{private_ips[0]}" +
               " -u #{username}" +
               " -p #{password}" +
-              " --server-add=self" +
+              " --server-add=#{ip}" +
               " --server-add-username=#{username}" +
               " --server-add-password=#{password}"
             log("clustering - server-add cmd: #{cmd}")
@@ -160,6 +160,7 @@ if cluster_tag and !cluster_tag.empty?
               log("clustering - server added")
             else
               log("clustering - error: server add failed; " + join)
+              `#{failed_cmd}`
             end
           else
             log("clustering - no other servers to join")
