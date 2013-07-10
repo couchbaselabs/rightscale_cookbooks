@@ -130,7 +130,7 @@ if cluster_tag and !cluster_tag.empty?
       cmd = "/opt/couchbase/bin/couchbase-cli server-list" +
         " -c 127.0.0.1" +
         " -u #{username}" +
-        " -p #{password}"
+        " -p #{password} 2>\&1"
       log("clustering - server-list cmd: #{cmd}")
       known_hosts = `#{cmd}`.strip
       log("clustering - server-list res: #{known_hosts}")
@@ -145,9 +145,8 @@ if cluster_tag and !cluster_tag.empty?
           private_ips = `#{cmd}`.strip.split("\n")
           log("clustering - rs_tag private_ip res: #{private_ips}")
           if private_ips.length >= 1
-            sleep 60
 
-            cmd = "/opt/couchbase/bin/couchbase-cli server-add" +
+            cmd = "sleep 30 && /opt/couchbase/bin/couchbase-cli server-add" +
               " -c #{private_ips[0]}" +
               " -u #{username}" +
               " -p #{password}" +
