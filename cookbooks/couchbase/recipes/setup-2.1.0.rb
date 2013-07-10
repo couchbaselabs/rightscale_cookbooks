@@ -153,16 +153,21 @@ if cluster_tag and !cluster_tag.empty?
               " --server-add=#{ip}" +
               " --server-add-username=#{username}" +
               " --server-add-password=#{password} 2>\&1"
-            log("clustering - server-add cmd: #{cmd}")
-            join = `#{cmd}`
-            log("clustering - server-add res: #{join}")
-            if join.match(/SUCCESS/)
-              log("clustering - server added")
-            else
-              log("clustering - error: server add failed; " + join)
-              log("stopping couchbase server")
-              `#{failed_cmd}`
+            begin
+                log("clustering - server-add cmd: #{cmd}")
+                execute "clustering - server-add cmd: #{cmd}" do
+                    command(cmd)
+                    action :run
+                end
+                log("clustering - server added")
+            rescue Exception => e
+                log e
+                execute "stopping couchbase server cmd: #{failed_cmd}" do
+                    command(failed_cmd)
+                    action :run
+                end
             end
+
           else
             log("clustering - no other servers to join")
           end
