@@ -153,7 +153,7 @@ if cluster_tag and !cluster_tag.empty?
               " -p #{password}" +
               " --server-add=#{ip}" +
               " --server-add-username=#{username}" +
-              " --server-add-password=#{password} 2>&1"
+              " --server-add-password=#{password} 2>\&1"
             log("clustering - server-add cmd: #{cmd}")
             join = `#{cmd}`
             log("clustering - server-add res: #{join}")
