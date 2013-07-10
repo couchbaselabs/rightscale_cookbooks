@@ -145,6 +145,7 @@ if cluster_tag and !cluster_tag.empty?
           private_ips = `#{cmd}`.strip.split("\n")
           log("clustering - rs_tag private_ip res: #{private_ips}")
           if private_ips.length >= 1
+            sleep 60
 
             cmd = "/opt/couchbase/bin/couchbase-cli server-add" +
               " -c #{private_ips[0]}" +
@@ -160,6 +161,7 @@ if cluster_tag and !cluster_tag.empty?
               log("clustering - server added")
             else
               log("clustering - error: server add failed; " + join)
+              log("stopping couchbase server")
               `#{failed_cmd}`
             end
           else
