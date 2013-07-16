@@ -53,7 +53,7 @@ begin
           node[:block_device][:devices][:device1][:mount_point].nil?)
     mount_point = node[:block_device][:devices][:device1][:mount_point]
     execute "configure data path to use mount point:  #{mount_point}" do
-      command("sleep 5 && chown couchbase:couchbase #{mount_point} &&" +
+      command("sleep 30 && chown couchbase:couchbase #{mount_point} &&" +
               " /opt/couchbase/bin/couchbase-cli node-init" +
               "        --node-init-data-path=#{mount_point}" +
               "        -c 127.0.0.1:8091" +
@@ -70,7 +70,7 @@ log("/opt/couchbase/bin/couchbase-cli cluster-init" +
     "        -c 127.0.0.1:8091" +
     "        --cluster-init-username=#{node[:db_couchbase][:cluster][:username]}")
 execute "initializing cluster with username: #{node[:db_couchbase][:cluster][:username]}" do
-  command("sleep 10" +
+  command("sleep 30" +
           " && /opt/couchbase/bin/couchbase-cli cluster-init" +
           "        -c 127.0.0.1:8091" +
           "        --cluster-init-username=#{node[:db_couchbase][:cluster][:username]}" +
@@ -78,7 +78,7 @@ execute "initializing cluster with username: #{node[:db_couchbase][:cluster][:us
   action :run
 end
 
-log("sleep 10 && /opt/couchbase/bin/couchbase-cli bucket-create" +
+log("sleep 30 && /opt/couchbase/bin/couchbase-cli bucket-create" +
     "    -c 127.0.0.1:8091" +
     "    -u #{node[:db_couchbase][:cluster][:username]}" +
     "    --bucket=#{node[:db_couchbase][:bucket][:name]}" +
@@ -87,7 +87,7 @@ log("sleep 10 && /opt/couchbase/bin/couchbase-cli bucket-create" +
     "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]}")
 begin
   execute "creating bucket: #{node[:db_couchbase][:bucket][:name]}" do
-    command("sleep 10 && /opt/couchbase/bin/couchbase-cli bucket-create" +
+    command("sleep 30 && /opt/couchbase/bin/couchbase-cli bucket-create" +
             "    -c 127.0.0.1:8091" +
             "    -u #{node[:db_couchbase][:cluster][:username]}" +
             "    -p #{node[:db_couchbase][:cluster][:password]}" +
