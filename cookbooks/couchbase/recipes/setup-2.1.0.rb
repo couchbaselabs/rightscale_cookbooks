@@ -153,7 +153,7 @@ if cluster_tag and !cluster_tag.empty?
               " --server-add=#{ip}" +
               " --server-add-username=#{username}" +
               " --server-add-password=#{password} 2>\&1"
-              cmd = "for i in {1..5}; do x=`$cmd`; if [ $x == 0 ]; then break; else echo "retrying ..."$i; fi; done"
+              cmd = "for i in {1..5}; do x=`$cmd`; if [ $x == 0 ]; then break; else echo 'retrying ...'$i; fi; done"
               begin
                 log("clustering - server-add cmd: #{cmd}")
                 execute "clustering - server-add cmd: #{cmd}" do
