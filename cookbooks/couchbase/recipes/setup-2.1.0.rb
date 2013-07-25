@@ -146,14 +146,14 @@ if cluster_tag and !cluster_tag.empty?
           log("clustering - rs_tag private_ip res: #{private_ips}")
           if private_ips.length >= 1
 
-            cmd = "sleep 30 && /opt/couchbase/bin/couchbase-cli server-add" +
+            add = "sleep 30 && /opt/couchbase/bin/couchbase-cli server-add" +
               " -c #{private_ips[0]}" +
               " -u #{username}" +
               " -p #{password}" +
               " --server-add=#{ip}" +
               " --server-add-username=#{username}" +
               " --server-add-password=#{password} 2>\&1"
-              cmd = "for i in {1..5}; do x=`$cmd`; if [ $x -eq 0 ]; then break; else echo 'retrying ...'$i; fi; done"
+              cmd = "for i in {1..5}; do x=\`#{add}\`; if [[ -z "$x" ]]; then break; else sleep 30 && echo 'retrying...'$i; fi; done"
               begin
                 log("clustering - server-add cmd: #{cmd}")
                 execute "clustering - server-add cmd: #{cmd}" do
