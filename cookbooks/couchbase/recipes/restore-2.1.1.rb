@@ -21,7 +21,7 @@ begin
     new_dir = "#{mount_point}" << "_back"
     execute "moving data to a backup location:  #{mount_point} -> #{new_dir}" do
       command("cd #{mount_point} && mkdir #{new_dir} && mv *couch* #{new_dir} && " +
-              "        move #{node[:db_couchbase][:bucket][:name]} #{new_dir}")
+              "        mv #{node[:db_couchbase][:bucket][:name]} #{new_dir}")
       action :run
     end
   end
