@@ -27,7 +27,8 @@
         "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1",
         "couchbase::setup-2.1.0",
-        "couchbase::setup-2.1.1"
+        "couchbase::setup-2.1.1",
+        "couchbase::restore-2.1.1"
       ],
       "calculated": false,
       "type": "string",
@@ -42,7 +43,8 @@
         "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1",
         "couchbase::setup-2.1.0",
-        "couchbase::setup-2.1.1"
+        "couchbase::setup-2.1.1",
+        "couchbase::restore-2.1.1"
       ],
       "calculated": false,
       "type": "string",
@@ -57,7 +59,8 @@
         "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1",
         "couchbase::setup-2.1.0",
-        "couchbase::setup-2.1.1"
+        "couchbase::setup-2.1.1",
+        "couchbase::restore-2.1.1"
       ],
       "calculated": false,
       "type": "string",
@@ -72,7 +75,8 @@
         "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1",
         "couchbase::setup-2.1.0",
-        "couchbase::setup-2.1.1"
+        "couchbase::setup-2.1.1",
+        "couchbase::restore-2.1.1"
       ],
       "calculated": false,
       "type": "string",
@@ -87,7 +91,8 @@
         "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1",
         "couchbase::setup-2.1.0",
-        "couchbase::setup-2.1.1"
+        "couchbase::setup-2.1.1",
+        "couchbase::restore-2.1.1"
       ],
       "calculated": false,
       "type": "string",
@@ -102,7 +107,8 @@
         "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1",
         "couchbase::setup-2.1.0",
-        "couchbase::setup-2.1.1"
+        "couchbase::setup-2.1.1",
+        "couchbase::restore-2.1.1"
       ],
       "calculated": false,
       "type": "string",
@@ -117,7 +123,8 @@
         "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1",
         "couchbase::setup-2.1.0",
-        "couchbase::setup-2.1.1"
+        "couchbase::setup-2.1.1",
+        "couchbase::restore-2.1.1"
       ],
       "calculated": false,
       "type": "string",
@@ -132,7 +139,8 @@
         "couchbase::setup-2.0.0",
         "couchbase::setup-2.0.1",
         "couchbase::setup-2.1.0",
-        "couchbase::setup-2.1.1"
+        "couchbase::setup-2.1.1",
+        "couchbase::restore-2.1.1"
       ],
       "calculated": false,
       "type": "string",
@@ -148,7 +156,8 @@
     "couchbase::setup-2.0.0": "Install Couchbase Server 2.0.0 packages. Setup Couchbase Server speicific default attributes",
     "couchbase::setup-2.0.1": "Install Couchbase Server 2.0.1 packages. Setup Couchbase Server speicific default attributes",
     "couchbase::setup-2.1.0": "Install Couchbase Server 2.1.0 packages. Setup Couchbase Server speicific default attributes",
-    "couchbase::setup-2.1.1": "Install Couchbase Server 2.1.1 packages. Setup Couchbase Server speicific default attributes"
+    "couchbase::setup-2.1.1": "Install Couchbase Server 2.1.1 packages. Setup Couchbase Server speicific default attributes",
+    "couchbase::restore-2.1.1": "Restore Couchbase Server 2.1.1 packages. Restore Couchbase Server from existing data"
   },
   "version": "0.1.10"
 }
