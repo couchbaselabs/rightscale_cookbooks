@@ -84,6 +84,22 @@
       "display_name": "Cluster Tag",
       "required": "optional"
     },
+    "db_couchbase/cluster/rebalance_count": {
+      "description": "Set this to an integer to have the cluster automatically rebalance itself after 'X' number of joins - Most useful to set this to the total number of nodes expected in the cluster. Setting it to 0 will only add the node to cluster without doing rebalance",
+      "recipes": [
+        "couchbase::default",
+        "couchbase::setup-2.0.0",
+        "couchbase::setup-2.0.1",
+        "couchbase::setup-2.1.0",
+        "couchbase::setup-2.1.1",
+        "couchbase::restore-2.1.1"
+      ],
+      "calculated": false,
+      "type": "string",
+      "default": "0",
+      "display_name": "Rebalance Count",
+      "required": "optional"
+    },
     "db_couchbase/bucket/name": {
       "description": "Bucket Name",
       "recipes": [

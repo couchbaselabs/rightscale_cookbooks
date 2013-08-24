@@ -165,6 +165,30 @@ else
   log("clustering - skipped, no cluster_tag")
 end
 
+# rebalance if certain conditions been met
+rebalance_count = node[:db_couchbase][:cluster][:rebalance_count]
+num_nodes = known_hosts.split("\n").length
+if rebalance_count > num_nodes
+    log("rebalancing: (rebalance_count = #{rebalance_count}) > (num_nodes = #{num_nodes}")
+    log("/opt/couchbase/bin/couchbase-cli rebalance" +
+        "  -u #{node[:db_couchbase][:cluster][:username]}" + 
+        "  -p #{node[:db_couchbase][:cluster][:username]}" + 
+        "  -c localhost:8091")
+    begin
+      execute "rebalance cluster" do 
+        commmand("/opt/couchbase/bin/couchbase-cli rebalance" +
+                 "  -u #{node[:db_couchbase][:cluster][:username]}" + 
+                 "  -p #{node[:db_couchbase][:cluster][:username]}" + 
+                 "  -c localhost:8091")
+        action :run
+    rescue Exception => e
+        log e
+    end 
+else
+    log("exiting due to insufficient amount of known nodes")
+    exit(0)
+end
+            
 # create bucket
 log("sleep 30 && /opt/couchbase/bin/couchbase-cli bucket-create" +
     "    -c 127.0.0.1:8091" +
