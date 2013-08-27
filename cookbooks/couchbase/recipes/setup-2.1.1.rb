@@ -170,7 +170,7 @@ end
 rebalance_count = node[:db_couchbase][:cluster][:rebalance_count]
 num_nodes = known_hosts.split("\n").length + 1
 if num_nodes >= rebalance_count.to_i
-    log("rebalancing: (rebalance_count = #{rebalance_count}) > (num_nodes = #{num_nodes}")
+    log("rebalancing: (num_nodes = #{num_nodes}) >= (rebalance_count = #{rebalance_count})")
     log("/opt/couchbase/bin/couchbase-cli rebalance" +
         "  -u #{node[:db_couchbase][:cluster][:username]}" + 
         "  -p #{node[:db_couchbase][:cluster][:password]}" + 
@@ -210,6 +210,8 @@ if num_nodes >= rebalance_count.to_i
     rescue Exception => e
         log e
     end
+else
+    log("rebalancing: (num_nodes = #{num_nodes}) < (rebalance_count = #{rebalance_count})")
 end
             
 rightscale_marker :end
