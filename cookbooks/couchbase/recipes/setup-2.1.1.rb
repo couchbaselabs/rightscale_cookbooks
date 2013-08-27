@@ -82,6 +82,7 @@ end
 cluster_tag = node[:db_couchbase][:cluster][:tag]
 log("db_couchbase/cluster/tag: #{cluster_tag}")
 
+known_hosts = ""
 if cluster_tag and !cluster_tag.empty?
   now = DateTime.now.strftime("%Y%m%d-%H%M%S.%L")
   log("clustering - now is #{now}")
