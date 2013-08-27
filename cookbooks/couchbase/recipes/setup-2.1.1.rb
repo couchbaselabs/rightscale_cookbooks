@@ -168,7 +168,7 @@ end
 
 # rebalance if certain conditions been met
 rebalance_count = node[:db_couchbase][:cluster][:rebalance_count]
-num_nodes = known_hosts.split("\n").length
+num_nodes = known_hosts.split("\n").length + 1
 if num_nodes >= rebalance_count.to_i
     log("rebalancing: (rebalance_count = #{rebalance_count}) > (num_nodes = #{num_nodes}")
     log("/opt/couchbase/bin/couchbase-cli rebalance" +
