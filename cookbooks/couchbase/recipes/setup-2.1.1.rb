@@ -83,6 +83,8 @@ cluster_tag = node[:db_couchbase][:cluster][:tag]
 log("db_couchbase/cluster/tag: #{cluster_tag}")
 
 known_hosts = ""
+username = node[:db_couchbase][:cluster][:username]
+password = node[:db_couchbase][:cluster][:password]
 if cluster_tag and !cluster_tag.empty?
   now = DateTime.now.strftime("%Y%m%d-%H%M%S.%L")
   log("clustering - now is #{now}")
@@ -101,9 +103,6 @@ if cluster_tag and !cluster_tag.empty?
       log("clustering - rs_tag qry cmd: #{qry_cmd}")
       qry_res = `#{qry_cmd}`
       log("clustering - rs_tag qry res: #{qry_res}")
-
-      username = node[:db_couchbase][:cluster][:username]
-      password = node[:db_couchbase][:cluster][:password]
 
       cmd = "/opt/couchbase/bin/couchbase-cli server-list" +
         " -c 127.0.0.1" +
@@ -168,6 +167,11 @@ end
 
 # rebalance if certain conditions been met
 rebalance_count = node[:db_couchbase][:cluster][:rebalance_count]
+cmd = "/opt/couchbase/bin/couchbase-cli server-list" +
+      " -c 127.0.0.1" +
+      " -u #{username}" +
+      " -p #{password} 2>\&1"
+known_hosts = `#{cmd}`.strip
 num_nodes = known_hosts.split("\n").length + 1
 if num_nodes >= rebalance_count.to_i
     log("rebalancing: (num_nodes = #{num_nodes}) >= (rebalance_count = #{rebalance_count})")
