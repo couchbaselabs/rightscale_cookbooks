@@ -85,7 +85,7 @@
       "required": "optional"
     },
     "db_couchbase/cluster/rebalance_count": {
-      "description": "Set this to an integer to have the cluster automatically",
+      "description": "Set this to an integer to have the cluster automatically ebalance itself after 'X' number of joins",
       "recipes": [
         "couchbase::default",
         "couchbase::setup-2.0.0",
