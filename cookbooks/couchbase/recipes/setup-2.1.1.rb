@@ -177,7 +177,7 @@ if num_nodes >= rebalance_count.to_i
         "  -c localhost:8091")
     begin
       execute "rebalance cluster" do 
-        ommmand("/opt/couchbase/bin/couchbase-cli rebalance" +
+        command("/opt/couchbase/bin/couchbase-cli rebalance" +
                  "  -u #{node[:db_couchbase][:cluster][:username]}" + 
                  "  -p #{node[:db_couchbase][:cluster][:username]}" + 
                  "  -c localhost:8091")
