@@ -174,13 +174,13 @@ if num_nodes >= rebalance_count.to_i
     log("/opt/couchbase/bin/couchbase-cli rebalance" +
         "  -u #{node[:db_couchbase][:cluster][:username]}" + 
         "  -p #{node[:db_couchbase][:cluster][:password]}" + 
-        "  -c localhost:8091")
+        "  -c localhost:8091 2>\&1")
     begin
       execute "rebalance cluster" do 
         command("/opt/couchbase/bin/couchbase-cli rebalance" +
                  "  -u #{node[:db_couchbase][:cluster][:username]}" +
                  "  -p #{node[:db_couchbase][:cluster][:password]}" +
-                 "  -c localhost:8091")
+                 "  -c localhost:8091 2>\&1")
         action :run
       end
     rescue Exception => e
@@ -198,7 +198,7 @@ log("sleep 30 && /opt/couchbase/bin/couchbase-cli bucket-create" +
     "    --bucket=#{node[:db_couchbase][:bucket][:name]}" +
     "    --bucket-type=couchbase" +
     "    --bucket-ramsize=#{node[:db_couchbase][:bucket][:ram]}" +
-    "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]}")
+    "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]} 2>\&1")
 begin
   execute "creating bucket: #{node[:db_couchbase][:bucket][:name]}" do
     command("sleep 30 && /opt/couchbase/bin/couchbase-cli bucket-create" +
@@ -209,7 +209,7 @@ begin
             "    --bucket-type=couchbase" +
             "    --bucket-password=\"#{node[:db_couchbase][:bucket][:password]}\"" +
             "    --bucket-ramsize=#{node[:db_couchbase][:bucket][:ram]}" +
-            "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]}")
+            "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]} 2>\&1")
     action :run
   end
 rescue Exception => e
