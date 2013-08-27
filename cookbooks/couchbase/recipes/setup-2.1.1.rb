@@ -186,34 +186,30 @@ if num_nodes >= rebalance_count.to_i
     rescue Exception => e
         log e
     end 
-else
-    log("exiting due to insufficient amount of known nodes")
-    exit(0)
+    # create bucket after rebalance
+    log("sleep 30 && /opt/couchbase/bin/couchbase-cli bucket-create" +
+        "    -c 127.0.0.1:8091" +
+        "    -u #{node[:db_couchbase][:cluster][:username]}" +
+        "    --bucket=#{node[:db_couchbase][:bucket][:name]}" +
+        "    --bucket-type=couchbase" +
+        "    --bucket-ramsize=#{node[:db_couchbase][:bucket][:ram]}" +
+        "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]} 2>\&1")
+    begin
+      execute "creating bucket: #{node[:db_couchbase][:bucket][:name]}" do
+        command("sleep 30 && /opt/couchbase/bin/couchbase-cli bucket-create" +
+                "    -c 127.0.0.1:8091" +
+                "    -u #{node[:db_couchbase][:cluster][:username]}" +
+                "    -p #{node[:db_couchbase][:cluster][:password]}" +
+                "    --bucket=#{node[:db_couchbase][:bucket][:name]}" +
+                "    --bucket-type=couchbase" +
+                "    --bucket-password=\"#{node[:db_couchbase][:bucket][:password]}\"" +
+                "    --bucket-ramsize=#{node[:db_couchbase][:bucket][:ram]}" +
+                "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]} 2>\&1")
+        action :run
+      end
+    rescue Exception => e
+        log e
+    end
 end
             
-# create bucket
-log("sleep 30 && /opt/couchbase/bin/couchbase-cli bucket-create" +
-    "    -c 127.0.0.1:8091" +
-    "    -u #{node[:db_couchbase][:cluster][:username]}" +
-    "    --bucket=#{node[:db_couchbase][:bucket][:name]}" +
-    "    --bucket-type=couchbase" +
-    "    --bucket-ramsize=#{node[:db_couchbase][:bucket][:ram]}" +
-    "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]} 2>\&1")
-begin
-  execute "creating bucket: #{node[:db_couchbase][:bucket][:name]}" do
-    command("sleep 30 && /opt/couchbase/bin/couchbase-cli bucket-create" +
-            "    -c 127.0.0.1:8091" +
-            "    -u #{node[:db_couchbase][:cluster][:username]}" +
-            "    -p #{node[:db_couchbase][:cluster][:password]}" +
-            "    --bucket=#{node[:db_couchbase][:bucket][:name]}" +
-            "    --bucket-type=couchbase" +
-            "    --bucket-password=\"#{node[:db_couchbase][:bucket][:password]}\"" +
-            "    --bucket-ramsize=#{node[:db_couchbase][:bucket][:ram]}" +
-            "    --bucket-replica=#{node[:db_couchbase][:bucket][:replica]} 2>\&1")
-    action :run
-  end
-rescue Exception => e
-    log e
-end
-
 rightscale_marker :end
