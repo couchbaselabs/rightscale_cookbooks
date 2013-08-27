@@ -173,13 +173,13 @@ if num_nodes >= rebalance_count.to_i
     log("rebalancing: (rebalance_count = #{rebalance_count}) > (num_nodes = #{num_nodes}")
     log("/opt/couchbase/bin/couchbase-cli rebalance" +
         "  -u #{node[:db_couchbase][:cluster][:username]}" + 
-        "  -p #{node[:db_couchbase][:cluster][:username]}" + 
+        "  -p #{node[:db_couchbase][:cluster][:password]}" + 
         "  -c localhost:8091")
     begin
       execute "rebalance cluster" do 
         command("/opt/couchbase/bin/couchbase-cli rebalance" +
-                 "  -u #{node[:db_couchbase][:cluster][:username]}" + 
-                 "  -p #{node[:db_couchbase][:cluster][:username]}" + 
+                 "  -u #{node[:db_couchbase][:cluster][:username]}" +
+                 "  -p #{node[:db_couchbase][:cluster][:password]}" +
                  "  -c localhost:8091")
         action :run
       end
