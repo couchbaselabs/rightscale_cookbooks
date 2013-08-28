@@ -85,6 +85,7 @@ log("db_couchbase/cluster/tag: #{cluster_tag}")
 known_hosts = ""
 username = node[:db_couchbase][:cluster][:username]
 password = node[:db_couchbase][:cluster][:password]
+private_ips = ""
 if cluster_tag and !cluster_tag.empty?
   now = DateTime.now.strftime("%Y%m%d-%H%M%S.%L")
   log("clustering - now is #{now}")
@@ -167,13 +168,7 @@ end
 
 # rebalance if certain conditions been met
 rebalance_count = node[:db_couchbase][:cluster][:rebalance_count]
-cmd = "wget --user=#{username} --password=#{password}" + 
-      " http://localhost:8091/pools/default/ -O data.json"
-`#{cmd}`
-file = open("data.json")
-json = file.read
-parsed = JSON.parse(json)
-num_nodes = parsed["nodes"].length
+num_nodes = private_ips.length + 1
 if num_nodes >= rebalance_count.to_i
     log("rebalancing: (num_nodes = #{num_nodes}) >= (rebalance_count = #{rebalance_count})")
     log("/opt/couchbase/bin/couchbase-cli rebalance" +
