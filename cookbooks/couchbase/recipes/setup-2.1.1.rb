@@ -170,17 +170,16 @@ end
 rebalance_count = node[:db_couchbase][:cluster][:rebalance_count]
 num_nodes = private_ips.length + 1
 if num_nodes >= rebalance_count.to_i
+    reb = "/opt/couchbase/bin/couchbase-cli rebalance" +
+          "  -u #{node[:db_couchbase][:cluster][:username]}" +
+          "  -p #{node[:db_couchbase][:cluster][:password]}" +
+          "  -c localhost:8091 2>\&1"
+    cmd = "x=\`#{reb}\`; echo x"
     log("rebalancing: (num_nodes = #{num_nodes}) >= (rebalance_count = #{rebalance_count})")
-    log("/opt/couchbase/bin/couchbase-cli rebalance" +
-        "  -u #{node[:db_couchbase][:cluster][:username]}" + 
-        "  -p #{node[:db_couchbase][:cluster][:password]}" + 
-        "  -c localhost:8091 2>\&1")
+    log(cmd)
     begin
       execute "rebalance cluster" do 
-        command("/opt/couchbase/bin/couchbase-cli rebalance" +
-                 "  -u #{node[:db_couchbase][:cluster][:username]}" +
-                 "  -p #{node[:db_couchbase][:cluster][:password]}" +
-                 "  -c localhost:8091 2>\&1")
+        command(cmd)
         action :run
       end
     rescue Exception => e
