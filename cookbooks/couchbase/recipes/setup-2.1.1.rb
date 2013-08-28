@@ -167,12 +167,13 @@ end
 
 # rebalance if certain conditions been met
 rebalance_count = node[:db_couchbase][:cluster][:rebalance_count]
-cmd = "/opt/couchbase/bin/couchbase-cli server-list" +
-      " -c 127.0.0.1" +
-      " -u #{username}" +
-      " -p #{password} 2>\&1"
-known_hosts = `#{cmd}`.strip
-num_nodes = known_hosts.split("\n").length + 1
+cmd = "wget --user=#{username} --password=#{password}" + 
+      " http://localhost:8091/pools/default/ -O data.json"
+`#{cmd}`
+file = open("data.json")
+json = file.read
+parsed = JSON.parse(json)
+num_nodes = parsed["nodes"].length
 if num_nodes >= rebalance_count.to_i
     log("rebalancing: (num_nodes = #{num_nodes}) >= (rebalance_count = #{rebalance_count})")
     log("/opt/couchbase/bin/couchbase-cli rebalance" +
