@@ -31,10 +31,10 @@ end
 
 couchbase_package = value_for_platform(
   ["centos", "redhat", "suse", "fedora" ] => {
-    "default" => "couchbase-server-#{couchbase_edition}_x86_64_#{couchbase_version}.rpm"
+    "default" => "couchbase-server-#{couchbase_edition}_#{couchbase_version}_x86_64.rpm"
   },
   ["ubuntu", "debian"] => {
-    "default" => "couchbase-server-#{couchbase_edition}_x86_64_#{couchbase_version}.deb"
+    "default" => "couchbase-server-#{couchbase_edition}_#{couchbase_version}_x86_64.deb"
   }
 )
 
