@@ -18,10 +18,9 @@ begin
           node[:block_device][:devices][:device1].nil? or
           node[:block_device][:devices][:device1][:mount_point].nil?)
     mount_point = node[:block_device][:devices][:device1][:mount_point]
-    new_dir = "#{mount_point}" << "/back"
-    execute "moving data to a backup location:  #{mount_point} -> #{new_dir}" do
-      command("cd #{mount_point} && mkdir -p #{new_dir} && mv *couch* #{new_dir} && " +
-              "        mv #{node[:db_couchbase][:bucket][:name]} #{new_dir}")
+    new_dir = "#{mount_point}" << "/back.tar.gz"
+    execute "compressing data to a backup location:  #{mount_point} -> #{new_dir}" do
+      command("cd #{mount_point} && tar cvzf #{new_dir} *")
       action :run
     end
   end
@@ -129,12 +128,12 @@ begin
           node[:block_device][:devices][:device1].nil? or
           node[:block_device][:devices][:device1][:mount_point].nil?)
     mount_point = node[:block_device][:devices][:device1][:mount_point]
-    new_dir = "#{mount_point}" << "/back"
+    new_dir = "#{mount_point}" << "/back.tar.gz"
     execute "restoring data from a backup location:  #{new_dir} -> #{mount_point}" do
         command("/etc/init.d/couchbase-server stop && cd #{mount_point} && " +
               "        rm -rf #{node[:db_couchbase][:bucket][:name]} && " + 
               "        rm -rf *.couch.* &&" + 
-              "        cp -R #{new_dir}/* #{mount_point} && " +
+              "        tar xvzf back.tar.gz && " +
               "        chown couchbase:couchbase * && " +
               "        /etc/init.d/couchbase-server start") 
       action :run
