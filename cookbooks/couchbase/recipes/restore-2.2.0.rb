@@ -133,7 +133,9 @@ begin
     execute "restoring data from a backup location:  #{new_dir} -> #{mount_point}" do
         command("/etc/init.d/couchbase-server stop && cd #{mount_point} && " +
               "        rm -rf #{node[:db_couchbase][:bucket][:name]} && " + 
+              "        rm -rf *.couch.* &&" + 
               "        cp -R #{new_dir}/* #{mount_point} && " +
+              "        chown couchbase:couchbase * && " +
               "        /etc/init.d/couchbase-server start") 
       action :run
     end
